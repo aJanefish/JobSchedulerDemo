@@ -9,6 +9,7 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scheduleJob(View view) {
-        JobInfo.Builder builder = new JobInfo.Builder(mJobId++, mServiceComponent);
+        JobInfo.Builder builder = new JobInfo.Builder(mJobId++, new ComponentName(this, MyJobService.class));
 
         //String delay = mDelayEditText.getText().toString();
         String delay = "1";
@@ -93,7 +94,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setRequiresDeviceIdle(false);
         //是否需要充电 - 默认false
         builder.setRequiresCharging(false);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //指定要运行此作业，设备的电池电量不得过低。
+            builder.setRequiresBatteryNotLow(false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //指定要运行此作业，设备的可用存储空间不得过低
+            builder.setRequiresStorageNotLow(false);
+        }
 
         //设置额外参数
         PersistableBundle extras = new PersistableBundle();

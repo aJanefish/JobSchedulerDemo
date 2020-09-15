@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -46,7 +47,7 @@ public class MyJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters params) {
-        Constant.tag(TAG, "on start job: " + params.getJobId());
+        Constant.tag(TAG, "onStartJob: " + params.getJobId() + " " + Log.getStackTraceString(new Throwable()));
         sendMessage(MSG_COLOR_START, params.getJobId());
 
         long duration = params.getExtras().getLong(WORK_DURATION_KEY);
@@ -67,7 +68,7 @@ public class MyJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        Constant.tag(TAG, "on stop job: " + params.getJobId());
+        Constant.tag(TAG, "onStopJob: " + params.getJobId());
         sendMessage(MSG_COLOR_STOP, params.getJobId());
         return false;
     }
